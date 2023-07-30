@@ -1,25 +1,17 @@
 'use client'
 
-import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-
-const todosApi = axios.create({
-    baseURL: 'http://localhost:3000/api',
-})
+import { addTodo } from '@/lib/todo'
 
 export default function AddTodo() {
     const router = useRouter()
     const queryClient = useQueryClient()
-
     const { register, handleSubmit } = useForm()
 
-    const addTodos = (values): Promise<void> =>
-        todosApi.post('/todos', values).then((res) => res.data)
-
     const { isLoading, mutate } = useMutation({
-        mutationFn: (values) => addTodos(values),
+        mutationFn: (values) => addTodo(values),
         onSuccess: () => {
             queryClient.invalidateQueries(['todos']), router.push('/dashboard')
         },

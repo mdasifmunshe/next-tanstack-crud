@@ -1,41 +1,22 @@
 'use client'
 
-import axios from 'axios'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-
-interface TodoList {
-    id: number
-    title: string
-    description: string
-    createdAt: Date
-    updatedAt: Date
-}
-
-const todosApi = axios.create({
-    baseURL: 'http://localhost:3000/api',
-})
+import { getTodoById, deleteTodo, TodoList } from '@/lib/todo'
 
 export default function Details() {
     const router = useRouter()
     const params = useParams()
     const { id } = params
+    const paramsID = id
 
     const queryClient = useQueryClient()
 
-    const fetchTodoById = (): Promise<TodoList[]> =>
-        todosApi.get(`/todos/${id}`).then((res) => res.data)
-
-    const { data, isLoading } = useQuery({
+    const { data, isLoading } = useQuery<TodoList[]>({
         queryKey: ['todo'],
-        queryFn: fetchTodoById,
+        queryFn: () => getTodoById(paramsID),
     })
-
-    // const deleteTodo = useMutation((id) => {
-    //     return axios.delete(`http://localhost:3000/api/todos/${id}`).then()
-    // })
-    const deleteTodo = (id: number): Promise<void> =>
-        todosApi.delete(`/todos/${id}`).then((res) => res.data)
 
     const { mutate } = useMutation({
         mutationFn: (id) => deleteTodo(id),
@@ -56,18 +37,18 @@ export default function Details() {
                 <div>{data.description}</div>
             </div>
             <div className="flex flex-row justify-between">
-                <button
-                    disabled={isLoading}
+                <Link
+                    href={`/updatetodo/${data.id}`}
                     type="button"
                     className="rounded-full border border-blue-500 bg-transparent px-4 py-2 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white"
                 >
                     Update
-                </button>
+                </Link>
                 <button
                     disabled={isLoading}
+                    onClick={() => mutate(data.id)}
                     type="button"
                     className="rounded-full border border-blue-500 bg-transparent px-4 py-2 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white"
-                    onClick={() => mutate(data.id)}
                 >
                     Delete
                 </button>

@@ -2,10 +2,10 @@
 
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { getAllTodos } from '@/lib/todo'
+import { getAllTodos, TodoList } from '@/lib/todo'
 
 export default function Home() {
-    const { data, isLoading } = useQuery({
+    const { data, isLoading } = useQuery<TodoList[]>({
         queryKey: ['todos'],
         queryFn: getAllTodos,
     })

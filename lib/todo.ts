@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { useQuery } from '@tanstack/react-query'
 
-interface TodoList {
+export interface TodoList {
     id: number
     title: string
     description: string
@@ -14,13 +13,13 @@ const todosApi = axios.create({
 export const getAllTodos = (): Promise<TodoList[]> =>
     todosApi.get('/todos').then((res) => res.data)
 
-export const getTodoById = (): Promise<TodoList[]> =>
+export const getTodoById = (id): Promise<TodoList[]> =>
     todosApi.get(`/todos/${id}`).then((res) => res.data)
 
 export const addTodo = (values): Promise<TodoList[]> =>
     todosApi.post('/todos', values).then((res) => res.data)
 
-export const updatetodo = (values): Promise<TodoList[]> =>
+export const updatetodo = (id, values): Promise<TodoList[]> =>
     todosApi.put(`/todos/${id}`, values).then((res) => res.data)
 
 export const deleteTodo = (id: number): Promise<void> =>
