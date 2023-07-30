@@ -3,14 +3,7 @@
 import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-
-interface TodoList {
-    id: number
-    title: string
-    description: string
-}
 
 const todosApi = axios.create({
     baseURL: 'http://localhost:3000/api',
@@ -22,7 +15,7 @@ export default function AddTodo() {
 
     const { register, handleSubmit } = useForm()
 
-    const addTodos = (values): Promise<TodoList[]> =>
+    const addTodos = (values): Promise<void> =>
         todosApi.post('/todos', values).then((res) => res.data)
 
     const { isLoading, mutate } = useMutation({
